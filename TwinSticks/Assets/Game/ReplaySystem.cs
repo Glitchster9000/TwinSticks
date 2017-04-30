@@ -16,17 +16,19 @@ public class ReplaySystem : MonoBehaviour {
 //		MyKeyFrame testKey = new MyKeyFrame(1.0f, Vector3.up, Quaternion.identity); // not used
 		rigidBody = GetComponent<Rigidbody>();
 		gm = FindObjectOfType<GameManager>();
+
 	}
-	
+
 
 
 	void Update () {
-		if(gm.recording) { // bool in gm script true
-			Record();
-		} else {
-			PlayBack();
+		if (!gm.gamePaused) {
+			if (gm.recording) { // bool in gm script true
+				Record();
+			} else {
+				PlayBack();
+			}
 		}
-		
 	}
 
 
@@ -34,10 +36,11 @@ public class ReplaySystem : MonoBehaviour {
 
 
 	private void Record() {
+		Debug.Log("Is Recording");
 		rigidBody.isKinematic = false;
 
 		int frame = Time.frameCount % bufferFrames; // circular frame storage
-		print("Writing frame " + frame);
+//		print("Writing frame " + frame);
 		float time = Time.time;
 
 		// creating keyframes
@@ -52,7 +55,7 @@ public class ReplaySystem : MonoBehaviour {
 		rigidBody.isKinematic = true;
 
 		int frame = Time.frameCount % bufferFrames;
-		print("Reading frame " + frame);
+//		print("Reading frame " + frame);
 
 		transform.position = keyFrames[frame].position;
 		transform.rotation = keyFrames[frame].rotation;
